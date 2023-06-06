@@ -4,8 +4,9 @@ const cardRouter = require('./routes/cards');
 const userRouter = require('./routes/users');
 const app = express();
 const { PORT = 3000 } = process.env;
+const { bd = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
 
-mongoose.connect('mongodb://127.0.0.1:27017/mestodb')
+mongoose.connect(bd)
 .then(() => {
   console.log('Подключение к базе состоялось')
 

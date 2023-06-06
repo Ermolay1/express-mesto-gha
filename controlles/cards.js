@@ -7,7 +7,7 @@ const getCards = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Ошибка сервера. Ошибка 500.",
+        message: "На сервере произошла ошибка. Ошибка 500.",
         err: err.message,
         stack: err.stack,
       });
@@ -31,7 +31,7 @@ const createCard = (req, res) => {
         });
       }
       return res.status(500).send({
-        message: "Ошибка сервера. Ошибка 500.",
+        message: "На сервере произошла ошибка. Ошибка 500.",
         err: err.message,
         stack: err.stack,
       });
@@ -57,7 +57,7 @@ const deleteCardById = (req, res) => {
         });
       }
       return res.status(500).send({
-        message: "Ошибка сервера. Ошибка 500.",
+        message: "На сервере произошла ошибка. Ошибка 500.",
         err: err.message,
         stack: err.stack,
       });
@@ -67,7 +67,7 @@ const deleteCardById = (req, res) => {
 const likeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
-    { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
+    { $addToSet: { likes: req.user._id } },
     { new: true },
   )
     .then((card) => {
@@ -87,7 +87,7 @@ const likeCard = (req, res) => {
         });
       }
       return res.status(500).send({
-        message: "Ошибка сервера. Ошибка 500.",
+        message: "На сервере произошла ошибка. Ошибка 500.",
         err: err.message,
         stack: err.stack,
       });
@@ -115,7 +115,7 @@ const dislikeCard = (req, res) => {
         });
       }
       return res.status(500).send({
-        message: "Ошибка сервера. Ошибка 500.",
+        message: "На сервере произошла ошибка. Ошибка 500.",
         err: err.message,
         stack: err.stack,
       });

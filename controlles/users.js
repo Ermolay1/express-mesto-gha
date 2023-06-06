@@ -7,7 +7,7 @@ const getUsers = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Ошибка сервера. Ошибка 500.",
+        message: "На сервере произошла ошибка. Ошибка 500.",
         err: err.message,
         stack: err.stack,
       });
@@ -32,7 +32,7 @@ const getUserById = (req, res) => {
         });
       }
       return res.status(500).send({
-        message: "Ошибка сервера. Ошибка 500.",
+        message: "На сервере произошла ошибка. Ошибка 500.",
         err: err.message,
         stack: err.stack,
       });
@@ -52,7 +52,7 @@ const createUser = (req, res) => {
         });
       }
       return res.status(500).send({
-        message: "Ошибка сервера. Ошибка 500",
+        message: "На сервере произошла ошибка. Ошибка 500.",
         err: err.message,
         stack: err.stack,
       });
@@ -83,7 +83,7 @@ const updateProfile = (req, res) => {
         });
       }
       return res.status(500).send({
-        message: "Ошибка сервера. Ошибка 500.",
+        message: "На сервере произошла ошибка. Ошибка 500.",
         err: err.message,
         stack: err.stack,
       });
@@ -114,7 +114,7 @@ const updateAvatar = (req, res) => {
         });
       }
       return res.status(500).send({
-        message: "Ошибка сервера. Ошибка 500.",
+        message: "На сервере произошла ошибка. Ошибка 500.",
         err: err.message,
         stack: err.stack,
       });

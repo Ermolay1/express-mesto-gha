@@ -9,7 +9,7 @@
     "start": "node app.js",
     "dev": "nodemon app.js"
   },
-  "author": "",
+  "author": "КУлишин Алексей",
   "license": "ISC",
   "devDependencies": {
     "eslint-config-airbnb-base": "^15.0.0",
