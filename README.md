@@ -10,5 +10,5 @@ express.js
 MongoDB
 Mongoose
 
-Ссылка на репозитарий:
-https://github.com/Ermolay1/express-mesto-gha
+Ссылка на проверку:
+https://github.com/Ermolay1/express-mesto-gha/actions
