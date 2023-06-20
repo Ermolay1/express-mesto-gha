@@ -12,12 +12,13 @@ const app = express();
 const { PORT = 3000 } = process.env;
 const { bd = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
 
-app.use(express.json());
-app.use(bodyParser.json());
 app.use((_, res, next) => {
   res.setHeader('Content-Type', 'application/json');
   next();
 });
+app.use(express.json());
+app.use(bodyParser.json());
+
 
 app.post('/signin', loginValid, login);
 app.post('/signup', createUserValid, createUser);
