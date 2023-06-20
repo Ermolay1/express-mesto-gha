@@ -1,70 +1,60 @@
 const Card = require("../models/card");
+const NotFound = require('../errors/NotFound');
+const CurrentError = require('../errors/CurrentError');
+const BadRequest = require('../errors/BadRequest');
 
-const getCards = (req, res) => {
-  Card.find({})
-    .then((cards) => {
-      res.send(cards);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: "На сервере произошла ошибка. Ошибка 500.",
-        err: err.message,
-        stack: err.stack,
-      });
-    });
+const getCards = (req, res, next) => {
+  Card
+    .find({})
+    .then((cards) => res.status(200).send(cards))
+    .catch(next);
 };
 
-const createCard = (req, res) => {
+const createCard = (req, res, next) => {
   const owner = req.user._id;
   const { name, link } = req.body;
 
-  Card.create({ name, link, owner })
+  Card
+    .create({ name, link, owner })
     .then((card) => {
       res.status(201).send(card);
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
-        return res.status(400).send({
-          message: "Введены неправильные данные. Ошибка 400.",
-          err: err.message,
-          stack: err.stack,
-        });
+        next(new BadRequest('Введены неправильные данные. Ошибка 400.'));
+      } else {
+        next(err);
       }
-      return res.status(500).send({
-        message: "На сервере произошла ошибка. Ошибка 500.",
-        err: err.message,
-        stack: err.stack,
-      });
     });
 };
 
-const deleteCardById = (req, res) => {
+const deleteCardById = (req, res, next) => {
   Card.findByIdAndRemove(req.params.cardId)
-    .then((card) => {
-      if (!card) {
-        return res.status(404).send({
-          message: "Пользователь не найден. Ошибка 404.",
-        });
+   .orFail(() => {
+    throw new NotFound('Карточка с таким _id не найдена');
+   })
+   .then((card) => {
+      const owner = card.owner.toString();
+      if (req.user._id === owner) {
+       Card.deleteOne(card)
+        .then(() => {
+          res.send(card);
+        })
+        .catch(next);
+      } else {
+        throw new CurrentError('Невозможно удалить карточку');
       }
-      return res.send(card);
     })
-    .catch((err) => {
-      if (err.name === "CastError") {
-        return res.status(400).send({
-          message: "Введены неправильные данные. Ошибка 400.",
-          err: err.message,
-          stack: err.stack,
-        });
-      }
-      return res.status(500).send({
-        message: "На сервере произошла ошибка. Ошибка 500.",
-        err: err.message,
-        stack: err.stack,
-      });
+    .catch((e) => {
+       if (e.name === 'CastError') {
+        next(new BadRequest('Переданы некорректные данные удаления'));
+       } else {
+        next(e);
+       }
     });
 };
 
-const likeCard = (req, res) => {
+const likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
@@ -72,53 +62,34 @@ const likeCard = (req, res) => {
   )
     .then((card) => {
       if (!card) {
-        return res.status(404).send({
-          message: "Пользователь не найден. Ошибка 404.",
-        });
+        throw new NotFound('Пользователь не найден');
       }
-      return res.send(card);
+       res.send({ data: card });
     })
     .catch((err) => {
       if (err.name === "CastError") {
-        return res.status(400).send({
-          message: "Введены неправильные данные. Ошибка 400.",
-          err: err.message,
-          stack: err.stack,
-        });
+        return next(new BadRequest('Переданы некорректные данные для лайка'));
       }
-      return res.status(500).send({
-        message: "На сервере произошла ошибка. Ошибка 500.",
-        err: err.message,
-        stack: err.stack,
-      });
+      return next(err);
     });
 };
-const dislikeCard = (req, res) => {
+const dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
-    { $pull: { likes: req.user._id } }, // добавить _id в массив, если его там нет
+    { $pull: { likes: req.user._id } },
     { new: true },
   )
     .then((card) => {
       if (!card) {
-        return res.status(404).send({
-           message: "Пользователь не найден. Ошибка 404." });
+        throw new NotFound('Пользователь не найден');
       }
-      return res.send(card);
+      res.send({ data: card});
     })
     .catch((err) => {
       if (err.name === "CastError") {
-        return res.status(400).send({
-          message: "Введены неправильные данные. Ошибка 400.",
-          err: err.message,
-          stack: err.stack,
-        });
+        return next(new BadRequest('Переданы некорректные данные для лайка'));
       }
-      return res.status(500).send({
-        message: "На сервере произошла ошибка. Ошибка 500.",
-        err: err.message,
-        stack: err.stack,
-      });
+      return next(err);
     });
 };
 
