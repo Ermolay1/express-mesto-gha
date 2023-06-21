@@ -11,7 +11,7 @@ const { erroeHandler } = require('./middlewares/errorHandler');
 
 const app = express();
 const { PORT = 3000 } = process.env;
-const { bd = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
+const { bd = 'mongodb://127.0.0.1:27017/mestod' } = process.env;
 
 /*app.use((_, res, next) => {
   res.setHeader('Content-Type', 'application/json');
@@ -30,9 +30,7 @@ app.use((req, res, next) => {
   next(new NotFound('Страница не найдена'));
 });
 /*app.use(erroeHandler);*/
-app.use((err, req, res, next) => {
-  res.status(500).send({ message: 'На сервере произошла ошибка' });
-});
+
 
 mongoose.connect(bd)
 .then(() => {
@@ -48,3 +46,7 @@ mongoose.connect(bd)
 
   process.exit();
 })
+app.use((err, req, res, next) => {
+  res.status(500).send({ message: 'На сервере произошла ошибка' });
+  next();
+});
