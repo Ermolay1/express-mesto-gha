@@ -25,7 +25,7 @@ const createCards = (req, res, next) => {
     });
 };
 
-const removeCard = (req, res, next) => {
+const deleteCardById  = (req, res, next) => {
   Card.findById(req.params.cardId)
     .orFail(() => {
       throw new NotFound('Карточка с указанным _id не найдена');
@@ -51,7 +51,7 @@ const removeCard = (req, res, next) => {
     });
 };//
 
-const getLike = (req, res, next) => {
+const likeCard = (req, res, next) => {
   Card
     .findByIdAndUpdate(
       req.params.cardId,
@@ -71,8 +71,7 @@ const getLike = (req, res, next) => {
       return next(err);
     });
 };
-// убрать лайк
-const removeLike = (req, res, next) => {
+const dislikeCard = (req, res, next) => {
   Card
     .findByIdAndUpdate(
       req.params.cardId,
@@ -94,9 +93,9 @@ const removeLike = (req, res, next) => {
 };
 
 module.exports = {
-  removeCard,
-  removeLike,
+  deleteCardById,
+  dislikeCard,
   createCards,
   getCards,
-  getLike,
+  likeCard,
 };

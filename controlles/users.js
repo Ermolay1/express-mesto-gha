@@ -2,7 +2,7 @@ const User = require('../models/user');
 const NotFound = require('../errors/NotFound'); // 404
 const BadRequest = require('../errors/BadRequest');
 
-const getAllUsers = (req, res) => {
+const getUsers = (req, res) => {
   User.find({})
     .then((data) => res.send({ data }))
     .catch(() => res.status(500).send({ message: 'переданы некорректные данные в методы создания карточки, пользователя, обновления аватара пользователя или профиля' }));
@@ -26,7 +26,7 @@ const getUserById = (req, res, next) => {
     });
 };
 
-const updateUser = (req, res, next) => {
+const updateProfile  = (req, res, next) => {
   const { name, about } = req.body;
   User
     .findByIdAndUpdate(
@@ -89,9 +89,9 @@ const getCurrentUser = (req, res, next) => {
 };
 
 module.exports = {
-  getAllUsers,
+  getUsers,
   getUserById,
-  updateUser,
+  updateProfile ,
   updateAvatar,
   getCurrentUser,
 };

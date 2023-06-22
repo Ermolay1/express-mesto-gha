@@ -2,9 +2,9 @@ const router = require('express').Router();
 const express = require('express');
 const auth = require('../middlewares/auth');
 const {
-  getAllUsers,
+  getUsers,
   getUserById,
-  updateUser,
+  updateProfile ,
   updateAvatar,
   getCurrentUser,
 } = require('../controlles/users');
@@ -17,13 +17,13 @@ const {
 
 router.use(auth);
 
-router.get('/users', getAllUsers);
+router.get('/users', getUsers);
 
 router.get('/users/me', getCurrentUser);
 
 router.patch('/users/me/avatar', updateAvatarValid, updateAvatar);
 
-router.patch('/users/me', updateUserValid, updateUser);
+router.patch('/users/me', updateUserValid, updateProfile );
 
 router.get('/users/:userId', getUsersByIdValid, getUserById);
 
