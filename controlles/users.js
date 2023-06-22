@@ -91,7 +91,7 @@ const getCurrentUser = (req, res, next) => {
 module.exports = {
   getUsers,
   getUserById,
-  updateProfile ,
+  updateProfile,
   updateAvatar,
   getCurrentUser,
 };

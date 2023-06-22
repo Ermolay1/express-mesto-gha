@@ -1,11 +1,10 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
-const BadRequest = require('../errors/BadRequest'); // 400
-const ConflictError = require('../errors/ConflictError'); // 409
+const BadRequest = require('../errors/BadRequest'); 
+const ConflictError = require('../errors/ConflictError');
 const AuthError = require('../errors/AuthError');
 
-// создаем пользователя
 module.exports.createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
@@ -22,7 +21,7 @@ module.exports.createUser = (req, res, next) => {
           },
         },
       ))
-      // eslint-disable-next-line consistent-return
+
       .catch((err) => {
         if (err.name === 'MongoServerError') {
           return next(new ConflictError('Пользователь с таким email уже существует'));
@@ -35,7 +34,7 @@ module.exports.createUser = (req, res, next) => {
   })
     .catch(next);
 };
-// проверяем почту и пароль
+
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 

@@ -25,7 +25,7 @@ const createCards = (req, res, next) => {
     });
 };
 
-const deleteCardById  = (req, res, next) => {
+const deleteCard  = (req, res, next) => {
   Card.findById(req.params.cardId)
     .orFail(() => {
       throw new NotFound('Карточка с указанным _id не найдена');
@@ -93,7 +93,7 @@ const dislikeCard = (req, res, next) => {
 };
 
 module.exports = {
-  deleteCardById,
+  deleteCard,
   dislikeCard,
   createCards,
   getCards,
