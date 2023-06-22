@@ -74,7 +74,7 @@ const updateAvatar = (req, res, next) => {
     { avatar },
     { new: true,
       runValidators: true,
-      upsert: true },
+       },
 
   )
     .then((user) => {

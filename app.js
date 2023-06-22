@@ -11,7 +11,7 @@ const { erroeHandler } = require('./middlewares/errorHandler');
 
 const app = express();
 const { PORT = 3000 } = process.env;
-const { bd = 'mongodb://127.0.0.1:27017/mestod' } = process.env;
+const { bd = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
 
 /*app.use((_, res, next) => {
   res.setHeader('Content-Type', 'application/json');
@@ -45,8 +45,18 @@ mongoose.connect(bd)
   console.log('Ошибка подключения к базе', err)
 
   process.exit();
-})
-app.use((err, req, res, next) => {
+});
+app.use(errors());
+/*app.use((err, req, res, next) => {
   res.status(500).send({ message: 'На сервере произошла ошибка' });
+  next();
+});*/
+app.use((err, req, res, next) => {
+  const { statusCode = 500, message } = err;
+  res.status(statusCode).send({
+    message: statusCode === 500
+      ? 'На сервере произошла ошибка'
+      : message,
+  });
   next();
 });

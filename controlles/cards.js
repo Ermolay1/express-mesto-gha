@@ -16,9 +16,7 @@ const createCard = (req, res, next) => {
 
   Card
     .create({ name, link, owner })
-    .then((card) => {
-      res.status(201).send(card);
-    })
+    .then((card) => res.status(201).send(card))
     .catch((err) => {
       if (err.name === "ValidationError") {
         next(new BadRequest('Введены неправильные данные. Ошибка 400.'));
@@ -29,7 +27,7 @@ const createCard = (req, res, next) => {
 };
 
 const deleteCardById = (req, res, next) => {
-  Card.findByIdAndRemove(req.params.cardId)
+  Card.findById(req.params.cardId)
    .orFail(() => {
     throw new NotFound('Карточка с таким _id не найдена');
    })
