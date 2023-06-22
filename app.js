@@ -6,6 +6,9 @@ const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 const { createUserValid, loginValid } = require('./middlewares/validation');
 const NotFound = require('./errors/NotFound');
+const errorHandler = require('./middlewares/errorHandler');
+const { PORT = 3000 } = process.env;
+const { bd = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
 
 const app = express();
 
@@ -21,18 +24,20 @@ app.use(cardsRouter);
 app.use((req, res, next) => {
   next(new NotFound('Страница по этому адресу не найдена'));
 });
-mongoose.connect('mongodb://127.0.0.1/mestodb');
 app.use(errors());
-app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
-  res.status(statusCode).send({
-    message: statusCode === 500
-      ? 'На сервере произошла ошибка'
-      : message,
-  });
-  next();
-});
+app.use(errorHandler);
 
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
+mongoose.connect(bd)
+.then(() => {
+  console.log('Подключение к базе состоялось')
+
+  app.listen(PORT, () => {
+    console.log(`Приложение работает на порте ${PORT}`)
+  })
+})
+
+.catch((err) => {
+  console.log('Ошибка подключения к базе', err)
+
+  process.exit();
 });
