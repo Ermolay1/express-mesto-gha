@@ -1,56 +1,28 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const cardRouter = require('./routes/cards');
-const userRouter = require('./routes/users');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
-const { createUserValid, loginValid} = require('./middlewares/validation');
+const usersRouter = require('./routes/users');
+const cardsRouter = require('./routes/cards');
+const { createUserValid, loginValid } = require('./middlewares/validation');
 const NotFound = require('./errors/NotFound');
-const { createUser, login } = require('./controlles/login');
-const { erroeHandler } = require('./middlewares/errorHandler');
 
 const app = express();
-const { PORT = 3000 } = process.env;
-const { bd = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
 
-/*app.use((_, res, next) => {
-  res.setHeader('Content-Type', 'application/json');
-  next();
-});*/
 app.use(express.json());
 app.use(bodyParser.json());
-
+const { createUser, login } = require('./controlles/login');
 
 app.post('/signin', loginValid, login);
 app.post('/signup', createUserValid, createUser);
 
-app.use(cardRouter);
-app.use(userRouter);
+app.use(usersRouter);
+app.use(cardsRouter);
 app.use((req, res, next) => {
-  next(new NotFound('Страница не найдена'));
+  next(new NotFound('Страница по этому адресу не найдена'));
 });
-/*app.use(erroeHandler);*/
-
-
-mongoose.connect(bd)
-.then(() => {
-  console.log('Подключение к базе состоялось')
-
-  app.listen(PORT, () => {
-    console.log(`Приложение работает на порте ${PORT}`)
-  })
-})
-
-.catch((err) => {
-  console.log('Ошибка подключения к базе', err)
-
-  process.exit();
-});
+mongoose.connect('mongodb://127.0.0.1/mestodb');
 app.use(errors());
-/*app.use((err, req, res, next) => {
-  res.status(500).send({ message: 'На сервере произошла ошибка' });
-  next();
-});*/
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
   res.status(statusCode).send({
@@ -59,4 +31,8 @@ app.use((err, req, res, next) => {
       : message,
   });
   next();
+});
+
+app.listen(3000, () => {
+  console.log('Server is running on port 3000');
 });
