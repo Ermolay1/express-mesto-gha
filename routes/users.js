@@ -4,7 +4,7 @@ const auth = require('../middlewares/auth');
 const {
   getUsers,
   getUserById,
-  updateProfile ,
+  updateProfile,
   updateAvatar,
   getCurrentUser,
 } = require('../controlles/users');
@@ -23,7 +23,7 @@ router.get('/users/me', getCurrentUser);
 
 router.patch('/users/me/avatar', updateAvatarValid, updateAvatar);
 
-router.patch('/users/me', updateUserValid, updateProfile );
+router.patch('/users/me', updateUserValid, updateProfile);
 
 router.get('/users/:userId', getUsersByIdValid, getUserById);
 

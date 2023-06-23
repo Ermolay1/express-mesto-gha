@@ -1,12 +1,19 @@
 const User = require('../models/user');
 const NotFound = require('../errors/NotFound'); // 404
 const BadRequest = require('../errors/BadRequest');
+const ErrorHandler = require('../middlewares/errorHandler');
 
-const getUsers = (req, res) => {
+function getUsers(req, res, next) {
   User.find({})
     .then((data) => res.send({ data }))
-    .catch(() => res.status(500).send({ message: 'переданы некорректные данные в методы создания карточки, пользователя, обновления аватара пользователя или профиля' }));
-};
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new ErrorHandler('Переданы некорректные данные в методы создания карточки, пользователя, обновления аватара или профиля'));
+        return;
+      }
+      next(err);
+    });
+}
 
 const getUserById = (req, res, next) => {
   const { userId } = req.params;
@@ -26,7 +33,7 @@ const getUserById = (req, res, next) => {
     });
 };
 
-const updateProfile  = (req, res, next) => {
+const updateProfile = (req, res, next) => {
   const { name, about } = req.body;
   User
     .findByIdAndUpdate(
