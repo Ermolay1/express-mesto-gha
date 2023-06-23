@@ -22,6 +22,7 @@ module.exports.createUser = (req, res, next) => {
         },
       ))
 
+      // eslint-disable-next-line consistent-return
       .catch((err) => {
         if (err.name === 'MongoServerError') {
           return next(new ConflictError('Пользователь с таким email уже существует'));
